@@ -20,14 +20,16 @@ if ($response) { //as-is, it sends both success and failures
 		exit();
 	}
 	else {
-		echo '<pre>' . print_r($response, true) . '</pre';
-		//TODO edit necessary files and this to redirect back to login with user-friendly error message instead of staying on testRabbitMQClient.php
+		$error = urelncode("Failed to log in: " . ($response['message'] ?? "Incorrect Username or Password"));
+		header("Location: /rabbitmq_example/index.html?error=$error");
+		exit();
 	}
 }
 else {
 
-$response['message'] = "ERROR: no resposne from RabbitMQ";
-echo '<pre>' ; print_r($response); echo '</pre';
+	$error = urelncode("ERROR: No Response from Server!");
+	header("Location: /rabbitmq_example/index.html?error=$error");
+	exit();
 
 }
 

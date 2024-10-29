@@ -5,7 +5,13 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require_once('mysqlClient.php');
 
-function doLogin($username, $password) {	
+function doLogin($username, $password) {
+	//TODO this is for test, remove later
+	
+        return array("returnCode" => '1', 'message' => "Login success!", "role" = "guest");
+	//
+
+
     $host = 'localhost';
     $dbUser = 'root';
     $dbPass = '';

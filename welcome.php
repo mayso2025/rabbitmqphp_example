@@ -5,16 +5,18 @@ require_once('rabbitMQLib.inc');
 session_start();
 
 // Check if the user is logged in by verifying if the session variables are set
-
-
-//$username = $_SESSION['user'];
-//$role = $_SESSION['role'];
-/*
-if (!isset($_SESSION['user']) || !isset($_SESSION['role'])) {
+/* TODO session is not persisting, may be due to localhost or address issues
+session_start();
+if (!isset($_SESSION["user"]) || !isset($_SESSION["role"])) {
     // If the user is not logged in, redirect to the login page
-    header("location:login.php");
+    header('Location: login.php');
     exit();
 }
+
+
+
+$username = $_SESSION["user"];
+$role = $_SESSION["role"];
 */
 ?>
 

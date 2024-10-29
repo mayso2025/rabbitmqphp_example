@@ -5,14 +5,17 @@ require_once('rabbitMQLib.inc');
 session_start();
 
 // Check if the user is logged in by verifying if the session variables are set
+
+
+//$username = $_SESSION['user'];
+//$role = $_SESSION['role'];
+/*
 if (!isset($_SESSION['user']) || !isset($_SESSION['role'])) {
     // If the user is not logged in, redirect to the login page
     header("location:login.php");
     exit();
 }
-
-$username = $_SESSION['user'];
-$role = $_SESSION['role'];
+*/
 ?>
 
 <!DOCTYPE html>
@@ -26,9 +29,9 @@ $role = $_SESSION['role'];
     <div class="welcome-container">
         <h1>Welcome, <?php echo htmlspecialchars($username); ?>!</h1>
         <p>You have successfully logged in.</p>
-        <p>Your role is: <?php echo htmlspecialchars($role); ?></p>
-
-        <a href="logout.php">Logout</a>
+       <!-- <p>Your role is: <?php echo htmlspecialchars($role); ?></p> -->
+	<a href="login.php">Logout</a>
+	
     </div>
 </body>
 </html>

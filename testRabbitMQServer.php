@@ -5,6 +5,8 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 function doLogin($username, $password) {
+	return array("returnCode" => '1', 'message' => "Login Success!");
+	
     $host = 'localhost';
     $dbUser = 'root';
     $dbPass = '';

@@ -3,10 +3,9 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
+require_once('mysqlClient.php');
 
-function doLogin($username, $password) {
-	return array("returnCode" => '1', 'message' => "Login Success!");
-	
+function doLogin($username, $password) {	
     $host = 'localhost';
     $dbUser = 'root';
     $dbPass = '';

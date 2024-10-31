@@ -9,7 +9,7 @@ if (isset($_SESSION['message'])){
     unset($_SESSION['message']);// clear the message after display 
 }
 ?>
-<form action= "rate-review-handler.php" method="post" enctype="multipart/form-data">
+<form action= "booking-handler.php" method="post" enctype="multipart/form-data">
         <label for="guestName">Name of booker</label> <br> 
         <input type="text"> <br> 
         <label for="numGuest"> How many people in total? </label><br> 

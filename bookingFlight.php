@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
-    <title>Booking Hotel</title>
+    <title>Book a Flight</title>
 </head>
 <!-- NOTE: The form is not yet complete  -->
 <?php  //Display Success or Error Message If able to Display//
@@ -10,7 +10,7 @@ if (isset($_SESSION['message'])){
     unset($_SESSION['message']);// clear the message after display 
 }
 ?>
-<form action= "rate-review-handler.php" method="post" enctype="multipart/form-data">
+<form action= "booking-flight-handler.php" method="post" enctype="multipart/form-data">
         <label for="guestName">Name of booker</label> <br> 
         <input type="text"> <br> 
         <label for="numGuest"> How many people in total? </label><br> 

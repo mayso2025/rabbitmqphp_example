@@ -1,6 +1,7 @@
 <?php
 
 require 'vendor/autoload.php';
+
 use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -9,10 +10,13 @@ $dotenv->load();
 
 $apiKey = $_ENV['API_KEY'];
 $apiSecret = $_ENV['API_SECRET'];
-$baseUrl = 'https://test.api.amadeus.com/v1';
+$baseUrl = 'https://test.api.amadeus.com';
 
-#echo $apiKey . " " . $apiSecret;
 
+
+#==========
+#getAccessToken
+#==========
 function getAccessToken($apiKey, $apiSecret){
 	$url = 'https://test.api.amadeus.com/v1/security/oauth2/token';
 
@@ -33,13 +37,49 @@ function getAccessToken($apiKey, $apiSecret){
 	$responseData = json_decode($response, true);
 	return $responseData['access_token'] ?? null;
 }
-###
 
-function getFlightOffers($accessToken){
+#==========
+#flightList
+#==========
+function flightList($accessToken){
+//TODO need to accept an array of options
+	$locationCode = 'NYC';
+	$callUrl = (string)"/v1/shopping/flight-destinations?origin=" . $locationCode;
+	
+	return processCall($accessToken, $callUrl);
+}
+
+
+#==========
+#hotelList
+#==========
+function hotelList($accessToken){
+	//TODO need to accept an array of options
+	//
+	$locationCode = 'NYC';
+	$callUrl = (string)"/v1/reference-data/locations/hotels/by-city?cityCode=" . $locationCode;
+
+	return processCall($accessToken, $callUrl);
+}
+
+#==========
+#processCall
+#==========
+function processCall($accessToken, $callUrl){
 	global $baseUrl;
-	#$url = "https://test.api.amadeus.com/v2/shopping/flight-offers";
-	$url = $baseUrl . "/shopping/flight-destinations?origin=PAR";
-	#$url = $baseUrl . "/shopping/flight-offers?originLocationCode=NYC&destinationLocationCode=LAX&departureDate=24-11-01&adults=1";
+
+	//Working below !!
+	//
+	//$url = $baseUrl . "/v1/reference-data/locations/hotels/by-city?cityCode=PAR";
+	
+	//this also works but needs specifications
+	//$url = $baseUrl . "/v2/shopping/flight-offers";
+
+	//this works best
+	//$url = $baseUrl . "/shopping/flight-destinations?origin=PAR";
+
+
+	$url = $baseUrl . $callUrl;
 
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -54,11 +94,21 @@ function getFlightOffers($accessToken){
 	return json_decode($response,true);
 }
 
-###
 
+
+#==========
 $accessToken = getAccessToken($apiKey, $apiSecret);
 if ($accessToken){
-	$results = getFlightOffers($accessToken);
+	/*
+	switch ($request['type']){
+	//case
+	}
+	 */
+	$results = flightList($accessToken);
+
+	//$results = hotelList($accessToken);
+	//TODO make switch-case and don't hard-code function calls ^
+
 	print_r($results);
 } else {
 	echo "FAILED: NO ACCESS TOKEN\n";

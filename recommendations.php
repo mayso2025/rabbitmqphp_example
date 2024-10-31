@@ -27,5 +27,12 @@
         <header> Here are some spots we feel you'd like! </header> 
     <!-- Insert the code that is needed to display the locations and their corresponding images-->
     <!-- Utilize the usage of HTML Cards https://www.w3schools.com/howto/howto_css_cards.asp --> 
+     <div class="card"> 
+        <img src="testImages/centralpark.jpeg" alt="locImage" style="width:100%"> 
+        <div class="container">
+            <h4></b>Central Park</b></h4>
+            <p>A large park in the center of NYC</p>
+    </div>
+    </div>
     </div>
 </html>

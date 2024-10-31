@@ -8,7 +8,7 @@ require_once('rabbitMQLib.inc');
 function doLogin($username, $password) {
 	//TODO this is for test, remove later
 	
-        return array("returnCode" => '1', 'message' => "Login Success!");
+        //return array("returnCode" => '1', 'message' => "Login Success!");
 	//
 
 

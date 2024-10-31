@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
@@ -23,4 +24,5 @@ if (isset($_SESSION['message'])){
         <label for="returnDate"> When are you to return?</label><br> 
         <input type="date" name="returnDate"> <br> 
       </form>
+
 </html>

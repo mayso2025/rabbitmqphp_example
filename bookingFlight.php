@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <title>Book a Flight</title>
 </head>
-<!-- NOTE: The form is not yet complete  -->
+<!-- FORM IS NOW COMPLETE, completed/edited by Mikey   -->
 <?php  //Display Success or Error Message If able to Display//
 if (isset($_SESSION['message'])){
     echo "<p>{$_SESSION['message']}</p>";
@@ -11,19 +11,16 @@ if (isset($_SESSION['message'])){
 }
 ?>
 <form action= "booking-flight-handler.php" method="post" enctype="multipart/form-data">
-        <label for="guestName">Name of booker</label> <br> 
-        <input type="text" name="guestName"> <br> 
-        <label for="numGuest"> How many people in total? </label><br> 
-        <input type="number" name="numGuest" min="1"> <br> 
-        <label for="checkinDate"> What is expected check in date? </label><br> 
-        <input type="date" name="checkinDate"> <br> 
-        <label for="checkinTime"> What is your expected check in time? </label><br> 
-        <input type="time" name="checkinTime"> <br> 
-        <label for="checkoutDate"> When is your expected check out date </label><br> 
-        <input type="date" name="checkoutDate"> <br> 
-        <label for="checkoutTime"> When is your expected check out time </label><br> 
-        <input type="time" name="checkoutTime"> <br> 
-        <label for="location"> Which hotel will you be booking? </label><br> 
-        <input type="text" name="location"> <br> 
+<!-- Form was copied from booking.php-->
+        <label for="ticketOwner">Name of ticket owner</label> <br> 
+        <input type="text" name="ticketOwner"> <br>  
+        <label for="origin">Where are you flying from?</label><br> 
+        <input type="text" name="origin"> <br> 
+        <label for="destination">What is your destination?</label><br> 
+        <input type="text" name="destination"> <br> 
+        <label for="departureDate">When are you to depart? </label><br> 
+        <input type="date" name="departureDate"> <br> 
+        <label for="returnDate"> When are you to return?</label><br> 
+        <input type="date" name="returnDate"> <br> 
       </form>
 </html>

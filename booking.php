@@ -9,6 +9,7 @@ if (isset($_SESSION['message'])){
     unset($_SESSION['message']);// clear the message after display 
 }
 ?>
+
 <form action= "booking-handler.php" method="post" enctype="multipart/form-data">
         <label for="guestName">Name of booker</label> <br> 
         <input type="text" name="guestName"> <br> 
@@ -22,7 +23,7 @@ if (isset($_SESSION['message'])){
         <input type="date" name="checkoutDate"> <br> 
         <label for="checkoutTime"> When is your expected check out time </label><br> 
         <input type="time" name="checkoutTime"> <br> 
-        <label for="location"> Which hotel will you be booking? </label><br> 
-        <input type="text" name="location"> <br> 
+        <label for="hotelName"> Which hotel will you be booking? </label><br> 
+        <input type="text" name="hotelName"> <br> 
       </form>
 </html>

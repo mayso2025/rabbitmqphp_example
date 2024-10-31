@@ -34,7 +34,7 @@ $role = $_SESSION["role"];
        <!-- <p>Your role is: <?php echo htmlspecialchars($role); ?></p> -->
        <a href="search.php" class="button">Search</a>
        <a href="rate-review.php" class="button">Rate&Review</a>
-       <a href="login.php"class="button">Logout</a>
+       <a href="/Apache/html/logout.php"class="button">Logout</a>
 	
     </div>
 </body>

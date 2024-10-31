@@ -32,7 +32,8 @@ $role = $_SESSION["role"];
         <h1>Welcome, <?php echo htmlspecialchars($username); ?>!</h1>
         <p>You have successfully logged in.</p>
        <!-- <p>Your role is: <?php echo htmlspecialchars($role); ?></p> -->
-       <a href="search.php" class="button">Go to Search</a>
+       <a href="search.php" class="button">Search</a>
+       <a href="rate-review.php" class="button">Rate&Review</a>
        <a href="login.php">Logout</a>
 	
     </div>

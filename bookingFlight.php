@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
-    <title>Booking Flight</title>
+    <title>Book a Flight</title>
 </head>
 <!-- FORM IS NOW COMPLETE, completed/edited by Mikey   -->
 <?php  //Display Success or Error Message If able to Display//
@@ -10,7 +10,7 @@ if (isset($_SESSION['message'])){
     unset($_SESSION['message']);// clear the message after display 
 }
 ?>
-<form action= "rate-review-handler.php" method="post" enctype="multipart/form-data">
+<form action= "booking-flight-handler.php" method="post" enctype="multipart/form-data">
 <!-- Form was copied from booking.php-->
         <label for="ticketOwner">Name of ticket owner</label> <br> 
         <input type="text" name="ticketOwner"> <br>  

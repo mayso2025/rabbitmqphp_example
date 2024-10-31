@@ -33,8 +33,11 @@ $role = $_SESSION["role"];
         <p>You have successfully logged in.</p>
        <!-- <p>Your role is: <?php echo htmlspecialchars($role); ?></p> -->
        <a href="search.php" class="button">Search</a>
+       <a href="booking.php" class="button">Book a Hotel</a>
+       <a href="bookingFlight.php" class="button">Book a Flight</a>
        <a href="rate-review.php" class="button">Rate&Review</a>
        <a href="/Apache/html/logout.php"class="button">Logout</a>
+       
 	
     </div>
 </body>

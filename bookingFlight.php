@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <title>Booking Flight</title>
 </head>
-<!-- FORM IS NOW COMPLETE, completed/edited by Mikey  -->
+<!-- FORM IS NOW COMPLETE, completed/edited by Mikey   -->
 <?php  //Display Success or Error Message If able to Display//
 if (isset($_SESSION['message'])){
     echo "<p>{$_SESSION['message']}</p>";
@@ -11,6 +11,7 @@ if (isset($_SESSION['message'])){
 }
 ?>
 <form action= "rate-review-handler.php" method="post" enctype="multipart/form-data">
+<!-- Form was copied from booking.php-->
         <label for="ticketOwner">Name of ticket owner</label> <br> 
         <input type="text" name="ticketOwner"> <br>  
         <label for="origin">Where are you flying from?</label><br> 

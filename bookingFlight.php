@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <title>Booking Flight</title>
 </head>
-<!-- NOTE: The form is not yet complete  -->
+<!-- FORM IS NOW COMPLETE, completed/edited by Mikey  -->
 <?php  //Display Success or Error Message If able to Display//
 if (isset($_SESSION['message'])){
     echo "<p>{$_SESSION['message']}</p>";

@@ -22,6 +22,7 @@ if (isset($_SESSION['message'])){
             
             <!--Got code for textarea from IS117 final project which involed using a textarea, needed a bigger box for reviews-->
             <!--Code edited by Mikey, VSCode was being weird, had someone else do it instead-->
+            <!-- Code Revisioned by Paulo Duarte-->
         </textarea>
       </form>
 </html>

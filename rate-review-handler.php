@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-// Database connection
+// Database connection inspired from IT202 Fall 2023 with Professor Matthew Toegel. PD438 10/30/2024//
 $dsn = 'mysql:host=localhost;dbname=your_database';
-$username = 'your_username';
-$password = 'your_password';
+$username = 'admin';
+$password = '12345';
 $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
 $pdo = new PDO($dsn, $username, $password, $options);
 

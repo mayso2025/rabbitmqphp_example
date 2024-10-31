@@ -10,6 +10,16 @@
     <body>
         <div class="container">
             <h2>Login </h2>
+
+	    <?php if (isset($_GET['error'])): ?>
+                <div class "error message" style="color: red;">
+                        <?php echo htmlspecialchars($_GET['error']); ?>
+                </div>
+            <?php endif;?>
+
+
+
+
             <form method="POST" action="/rabbitmqphp_example/testRabbitMQClient.php">
                 <div class="container">
                     <p>Please fill in all fields </p>

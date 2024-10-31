@@ -1,33 +1,40 @@
 #!/usr/bin/php
 <?php
+
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-/*
+
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
-if (isset($argv[1]))
-{
-  $msg = $argv[1];
-}
-else
-{
-  $msg = "test message";
-}
-*/
+
 $request = array();
 $request['type'] = "login";
 $request['username'] = $_POST["username"];
 $request['password'] = $_POST["password"];
-$msg = "welcome back my skibidi sigmas";
-$request['message'] = $msg;
-echo '<pre>' ; print_r($request); echo '</pre';
-/*
+
+
 $response = $client->send_request($request);
-//$response = $client->publish($request);
+if ($response) { //as-is, it sends both success and failures
+	if ($response['returnCode']){ //this specifies if logn is success (returnCode=1)
+		
+		session_start();
+		$_SESSION["user"] = $response["username"];
+		$_SESSION["role"] = $response["role"];
+		header('Location: welcome.php');
+		exit();
+	}
+	else {
+		//TODO add an error message for php, not html
+		header("Location: login.php");
+		exit();
+	}
+}
+else {
+	//TODO add an error message for php, not html
+	header("Location: login.php");
+	exit();
 
-echo "client received response: ".PHP_EOL;
-print_r($response);
-echo "\n\n";
+}
 
-echo $argv[0]." END".PHP_EOL;
-*/
+
+//end of file

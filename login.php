@@ -30,7 +30,7 @@
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password"/> <br><br>
                     <input type="submit" name="submit" value="Login"/>
-                    <a href="register.php">Register</a>
+                    <a href="register.php" class="button">Register</a>
                 </div>
             </form>
         </div>

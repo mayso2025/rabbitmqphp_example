@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'vendor/autoload.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -19,7 +20,7 @@ $bookingData = [
     'checkinTime' => $_POST['checkinTime'] ?? '',
     'checkoutDate' => $_POST['checkoutDate'] ?? '',
     'checkoutTime' => $_POST['checkoutTime'] ?? '',
-    'location' => $_POST['location'] ?? ''
+    'hotelName' => $_POST['hotelName'] ?? ''  // Corrected from 'location' to 'hotelName'
 ];
 
 // Convert booking data to JSON
@@ -36,8 +37,6 @@ $channel->close();
 $connection->close();
 
 // Redirect or display a success message
-session_start();
 $_SESSION['message'] = 'Booking submitted successfully!';
 header('Location: booking.php');
 exit;
-?>

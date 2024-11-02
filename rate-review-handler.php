@@ -1,46 +1,72 @@
 <?php
+require 'vendor/autoload.php';
+
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+
+// Start a session to handle messages
 session_start();
 
-// Database connection inspired from IT202 Fall 2023 with Professor Matthew Toegel. PD438 10/30/2024//
-$dsn = 'mysql:host=localhost;dbname=your_database';
-$username = 'admin';
-$password = '12345';
-$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
-$pdo = new PDO($dsn, $username, $password, $options);
+try {
+    // Connect to RabbitMQ server
+    $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+    $channel = $connection->channel();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get review text
-    $reviewText = $_POST['review_text'];
+    // Declare queues: one for sending rate review requests, one for receiving responses
+    $channel->queue_declare('rate_review_queue', false, true, false, false);
+    $channel->queue_declare('rate_review_response_queue', false, true, false, false);
 
-    // Check if the file upload is valid
-    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-        // Get file data
-        $fileTmpPath = $_FILES['photo']['tmp_name'];
-        $fileName = $_FILES['photo']['name'];
-        $fileSize = $_FILES['photo']['size'];
-        $fileType = $_FILES['photo']['type'];
-        $fileContent = file_get_contents($fileTmpPath);
+    // Collect form data for the rate review
+    $rateReviewData = [
+        'guestName' => $_POST['guestName'] ?? '',
+        'review' => $_POST['review'] ?? '',
+        'rating' => $_POST['rating'] ?? '',
+        'location' => $_POST['location'] ?? '',
+        'date' => $_POST['date'] ?? ''
+    ];
 
-        // Insert data into database
-        $stmt = $pdo->prepare("INSERT INTO reviews (review_text, photo_name, photo_size, photo_type, photo_data) VALUES (:reviewText, :fileName, :fileSize, :fileType, :fileContent)");
-        $stmt->bindParam(':reviewText', $reviewText);
-        $stmt->bindParam(':fileName', $fileName);
-        $stmt->bindParam(':fileSize', $fileSize);
-        $stmt->bindParam(':fileType', $fileType);
-        $stmt->bindParam(':fileContent', $fileContent, PDO::PARAM_LOB);
+    // Convert review data to JSON
+    $dataJson = json_encode($rateReviewData);
 
-        // Check if data insertion was successful
-        if ($stmt->execute()) {
-            $_SESSION['message'] = "Review and photo submitted successfully!";
-        } else {
-            $_SESSION['message'] = "Error saving review and photo.";
-        }
-    } else {
-        $_SESSION['message'] = "Error with the uploaded photo.";
+    // Create a message with the data
+    $message = new AMQPMessage($dataJson, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
+
+    // Publish the message to the request queue
+    $channel->basic_publish($message, '', 'rate_review_queue');
+
+    // Listen for a response in the rate_review_response_queue
+    $response = null;
+    $callback = function($responseMsg) use (&$response) {
+        $response = json_decode($responseMsg->body, true);
+        $_SESSION['responseData'] = $response;
+        $responseMsg->ack(); // Acknowledge the response message
+    };
+
+    // Consume one message from the response queue and wait for the callback
+    $channel->basic_consume('rate_review_response_queue', '', false, false, false, false, $callback);
+
+    // Wait for the response from the response queue
+    while (!$response && $channel->is_consuming()) {
+        $channel->wait();
     }
 
-    // Redirect back to the form page
-    header("Location: rate-review.php");
-    exit();
+    // Close the channel and connection
+    $channel->close();
+    $connection->close();
+
+    // Set success message or store response data
+    if ($response) {
+        $_SESSION['message'] = 'Rate review submitted successfully!';
+    } else {
+        $_SESSION['message'] = 'No response received from review service.';
+    }
+
+} catch (Exception $e) {
+    // If there's an error, set an error message
+    $_SESSION['message'] = 'Error: ' . $e->getMessage();
 }
+
+// Redirect back to the review page
+header('Location: reviewpage.php');
+exit;
 ?>

@@ -13,7 +13,7 @@ if (isset($_SESSION['message'])){
 <form action= "rate-review-handler.php" method="post" enctype="multipart/form-data">
 
         <label for="rating" max="5" min="1">Rate the Location (Between 1-5) </label><br>
-        <input type="number" id="fname" name="fname"><br>
+        <input type="number" id="rating" name="rating" min="1" max="5"><br>
         <label for="lname">Review:</label><br>
         <textarea id="box" name="review_box" rows="10" cols="50"> 
         <label for="photo">Upload Photo:</label>

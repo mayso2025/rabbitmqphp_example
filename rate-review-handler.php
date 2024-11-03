@@ -1,6 +1,16 @@
 <?php
 session_start();
 
+//NOTE: Copied from Dr. Kehoe's code, IMPORTANT: this is the code that is primarily used to 1. store the data from the forms and 2. send the array where the form data is stored to the MQ
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
+
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+$requestReview = array();
+
+
 // Database connection inspired from IT202 Fall 2023 with Professor Matthew Toegel. PD438 10/30/2024//
 $dsn = 'mysql:host=localhost;dbname=your_database';
 $username = 'admin';
@@ -11,6 +21,7 @@ $pdo = new PDO($dsn, $username, $password, $options);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get review text
     $reviewText = $_POST['review_text'];
+    $reviewNum = $_POST['rating']
 
     // Check if the file upload is valid
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
@@ -21,7 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileType = $_FILES['photo']['type'];
         $fileContent = file_get_contents($fileTmpPath);
 
+
+        $requestReview['type'] = "rateAndReview";
+        $requestReview['review'] = $reviewText;
+        $requestReview['rating'] = $reviewNum;
+
+        $response = $client->send_request($requestReview); //sends data up the MQ
+
+        echo $response //just to test 
+
         // Insert data into database
+        //Maybe insert the database code in a seperate file? instead of having the handler be in the front-end
+        /*
         $stmt = $pdo->prepare("INSERT INTO reviews (review_text, photo_name, photo_size, photo_type, photo_data) VALUES (:reviewText, :fileName, :fileSize, :fileType, :fileContent)");
         $stmt->bindParam(':reviewText', $reviewText);
         $stmt->bindParam(':fileName', $fileName);
@@ -37,7 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     } else {
         $_SESSION['message'] = "Error with the uploaded photo.";
-    }
+         */ 
+        }
+   
 
     // Redirect back to the form page
     header("Location: rate-review.php");

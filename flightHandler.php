@@ -8,7 +8,7 @@ require_once('rabbitMQLib.inc');
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
-$requestReview = array();
+$flightBook = array();
 
 
 // Database connection inspired from IT202 Fall 2023 with Professor Matthew Toegel. PD438 10/30/2024//
@@ -20,8 +20,12 @@ $pdo = new PDO($dsn, $username, $password, $options);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get review text
-    $reviewText = $_POST['review_text'];
-    $reviewNum = $_POST['rating']
+    $reviewText = $_POST['review_text']; //ticketOwner
+    $reviewText = $_POST['review_text']; //origin 
+    $reviewText = $_POST['review_text']; //destination 
+    $reviewText = $_POST['review_text']; //departureDate
+    $reviewText = $_POST['review_text']; // returnDate 
+    
 
     // Check if the file upload is valid
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {

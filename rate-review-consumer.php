@@ -3,6 +3,9 @@ require 'vendor/autoload.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
 
 // Connect to RabbitMQ server
 $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');

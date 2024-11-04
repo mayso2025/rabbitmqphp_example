@@ -21,7 +21,7 @@ $pdo = new PDO($dsn, $username, $password, $options);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get review text
     $reviewText = $_POST['review_text']; //bookername
-    $reviewText = $_POST['review_text']; //numGuest
+    $reviewText = $_POST['review_text']; //numGuest (insert random test)
     $reviewText = $_POST['review_text']; //checkinTime
     $reviewText = $_POST['review_text']; //checkinDate
     $reviewText = $_POST['review_text']; //checkoutTime

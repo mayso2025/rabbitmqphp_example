@@ -6,12 +6,10 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-	
 
 $apiKey = $_ENV['API_KEY'];
 $apiSecret = $_ENV['API_SECRET'];
 $baseUrl = 'https://test.api.amadeus.com';
-
 
 
 #==========
@@ -39,15 +37,60 @@ function getAccessToken($apiKey, $apiSecret){
 }
 
 #==========
+#insertData
+#==========
+function insertData($insertQuery){
+// based on doLogin from testRabbitMQServer.php
+	$host = 'node2';
+    	$dbUser = 'test';
+    	$dbPass = 'test';
+    	$dbName = 'it490';
+
+    // Create a database connection
+    	$conn = mysqli_connect($host, $dbUser, $dbPass, $dbName);
+
+    // Check for connection errors
+    	if ($conn->connect_error) {
+        	//return array("returnCode" => '0', 'message' => "Database connection error");
+    		exit();
+	}
+	
+	try {
+		$stmt = $conn->prepare($insertQuery);
+		//TODO bind_param here, have insertData accept another argument of an array? or too much?
+		$stmt->execute();
+	} finally {
+        //close afterwards or else you're causing a DoS, no good!
+        if ($stmt) {
+            $stmt->close();
+        }
+        $conn->close();
+    }
+}
+
+
+#==========
 #flightList
 #==========
 function flightList($accessToken, $locationCode){
-//TODO need to accept an array of options for CRON
-	//$locationCode = 'NYC';
-	
 	$callUrl = (string)"/v1/shopping/flight-destinations?origin=" . $locationCode;
 	
-	return processCall($accessToken, $callUrl);
+	$data = processCall($accessToken, $callUrl);
+	if (!empty($data)) {
+		foreach ($data as $entry){
+			$origin = $entry['origin'];
+			$destination = $entry['destination'];
+			$departure_date = $entry['departureDate'];
+	                $return_date = $entry['returnDate'];
+	                $price = $entry['price']['total'];
+	                $flight_dates_link = $entry['links']['flightDates'];
+	                $flight_offers_link = $entry['links']['flightOffers'];
+			
+			//TODO if possible fix to bind params, currently doing this way for testing functionality
+			$insertQuery = "INSERT INTO flights (origin_code, destination_code, departure_date, return_date, price, flight_dates_link, flight_offers_link) VALUES ('$origin', '$destination', '$departure_date', '$return_date', '$price', '$flight_dates_link', '$flight_offers_link')";
+			insertData($insertQuery);
+		}
+	}
 }
 
 
@@ -55,13 +98,27 @@ function flightList($accessToken, $locationCode){
 #hotelList
 #==========
 function hotelList($accessToken, $locationCode){
-	//TODO need to accept an array of options for CRON
-	
-	//$locationCode = 'NYC';
-	
 	$callUrl = (string)"/v1/reference-data/locations/hotels/by-city?cityCode=" . $locationCode;
 
-	return processCall($accessToken, $callUrl);
+	$data = processCall($accessToken, $callUrl);
+	if (!empty($data)) {
+		foreach ($data as $entry){
+			$chain_code = $entry['chainCode'];
+			$iata_code = $entry['iataCode'];
+			$dupe_id = $entry['dupeId'];
+			$name = $entry['name'];
+			$hotel_id = $entry['hotelId'];
+			$latitude = $entry['geoCode']['latitude'];
+			$longitude = $entry['geoCode']['longitude'];
+			$country_code = $entry['address']['countryCode'];
+			$last_update = $entry['lastUpdate'];
+			
+
+			//TODO if possible fix to bind params, currently doing this way for testing functionality
+			$insertQuery = "INSERT INTO hotels (location_code, hotel_id, hotel_name, latitude, longitude, country_code, last_update, dupe_id, chain_code) VALUES ('$iata_code', '$hotel_id', '$name', '$latitude', '$longitude', '$country_code', '$last_update', '$dupe_id', '$chain_code')";
+			insertData($insertQuery);
+		}
+	}
 }
 
 #==========
@@ -87,8 +144,6 @@ function processCall($accessToken, $callUrl){
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, [
 		"Authorization: Bearer $accessToken",
-		
-		#"Content-Type:application/json"
 	]);
 
 	$response = curl_exec($ch);
@@ -96,14 +151,11 @@ function processCall($accessToken, $callUrl){
 	return json_decode($response,true);
 }
 
-
-
 #==========
 
 function requestApi($request){
 	$accessToken = getAccessToken($apiKey, $apiSecret);
 	if ($accessToken){
-		// TODO implement conditional. get value from POST
 		switch ($request['type']){
 			case 'flight':
 				$results = flightList($accessToken, $locationCode);
@@ -112,9 +164,6 @@ function requestApi($request){
 				$results = hotelList($accessToken, $locationCode);
 	  			break;
 		}
-		
-		//TODO make switch-case and don't hard-code function calls ^
-	
 		print_r($results);
 	} else {
 		echo "FAILED: NO ACCESS TOKEN\n";

@@ -23,6 +23,8 @@ if (isset($_SESSION['message'])){
         <input type="date" name="departureDate"> <br> 
         <label for="returnDate"> When are you to return?</label><br> 
         <input type="date" name="returnDate"> <br> 
+        <lable for="submit"> Book Your Flight> </label> 
+        <input type="submit" name="submit"> 
       </form>
 
 </html>

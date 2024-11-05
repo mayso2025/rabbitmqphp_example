@@ -3,12 +3,12 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('mysqlClient.php');
+
 
 function doLogin($username, $password) {
 	//TODO this is for test, remove later
 	
-        return array("returnCode" => '1', 'message' => "Login success!", "role" = "guest");
+        return array("returnCode" => '1', 'message' => "Login Success!");
 	//
 
 
@@ -72,7 +72,7 @@ function requestProcessor($request)
   switch ($request['type'])
   {
     case "login":
-      return doLogin($request['username'],$request['password']);
+      return doLogin($request['username'], $request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
   }

@@ -5,6 +5,8 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
+session_start();
+
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 
 $request = array();
@@ -16,10 +18,8 @@ $request['password'] = $_POST["password"];
 $response = $client->send_request($request);
 if ($response) { //as-is, it sends both success and failures
 	if ($response['returnCode']){ //this specifies if logn is success (returnCode=1)
+		$_SESSION['user']=$request['username'];
 		
-		session_start();
-		$_SESSION["user"] = $response["username"];
-		$_SESSION["role"] = $response["role"];
 		header('Location: welcome.php');
 		exit();
 	}

@@ -8,6 +8,7 @@ session_start();
 // TODO session is not persisting, may be due to localhost or address issues
 
 if (!isset($_SESSION['user'])) { //check only for user!!
+
     // If the user is not logged in, redirect to the login page
     header('Location: login.php');
     exit();

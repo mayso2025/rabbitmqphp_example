@@ -41,9 +41,10 @@ function getAccessToken($apiKey, $apiSecret){
 #==========
 #flightList
 #==========
-function flightList($accessToken){
-//TODO need to accept an array of options
-	$locationCode = 'NYC';
+function flightList($accessToken, $locationCode){
+//TODO need to accept an array of options for CRON
+	//$locationCode = 'NYC';
+	
 	$callUrl = (string)"/v1/shopping/flight-destinations?origin=" . $locationCode;
 	
 	return processCall($accessToken, $callUrl);
@@ -53,10 +54,11 @@ function flightList($accessToken){
 #==========
 #hotelList
 #==========
-function hotelList($accessToken){
-	//TODO need to accept an array of options
-	//
-	$locationCode = 'NYC';
+function hotelList($accessToken, $locationCode){
+	//TODO need to accept an array of options for CRON
+	
+	//$locationCode = 'NYC';
+	
 	$callUrl = (string)"/v1/reference-data/locations/hotels/by-city?cityCode=" . $locationCode;
 
 	return processCall($accessToken, $callUrl);
@@ -97,21 +99,27 @@ function processCall($accessToken, $callUrl){
 
 
 #==========
-$accessToken = getAccessToken($apiKey, $apiSecret);
-if ($accessToken){
-	/*
-	switch ($request['type']){
-	//case
+
+function requestApi($request){
+	$accessToken = getAccessToken($apiKey, $apiSecret);
+	if ($accessToken){
+		// TODO implement conditional. get value from POST
+		switch ($request['type']){
+			case 'flight':
+				$results = flightList($accessToken, $locationCode);
+				break;
+			case 'hotel':
+				$results = hotelList($accessToken, $locationCode);
+	  			break;
+		}
+		
+		//TODO make switch-case and don't hard-code function calls ^
+	
+		print_r($results);
+	} else {
+		echo "FAILED: NO ACCESS TOKEN\n";
 	}
-	 */
-	$results = flightList($accessToken);
-
-	//$results = hotelList($accessToken);
-	//TODO make switch-case and don't hard-code function calls ^
-
-	print_r($results);
-} else {
-	echo "FAILED: NO ACCESS TOKEN\n";
 }
+
 
 ?>

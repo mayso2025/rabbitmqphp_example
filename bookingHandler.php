@@ -20,16 +20,22 @@ $pdo = new PDO($dsn, $username, $password, $options);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get review text
-    $reviewText = $_POST['review_text']; //bookername
-    $reviewText = $_POST['review_text']; //numGuest (insert random test)
-    $reviewText = $_POST['review_text']; //checkinTime
-    $reviewText = $_POST['review_text']; //checkinDate
-    $reviewText = $_POST['review_text']; //checkoutTime
-    $reviewText = $_POST['review_text']; //checkoutDate
-    $reviewText = $_POST['review_text']; //hotelName 
+    $bookername= $_POST['bookerName']; //bookername
+    $numGuest = $_POST['numGuest']; //numGuest (insert random test)
+    $checkinTime = $_POST['checkinTime']; //checkinTime
+    $checkinDate = $_POST['checkinDate']; //checkinDate
+    $checkoutTime = $_POST['checkoutTime']; //checkoutTime
+    $checkoutDate = $_POST['checkoutDate']; //checkoutDate
+    $hotelName = $_POST['hotelName']; //hotelName 
 
+    $bookingRequest[] = $bookername;
+    $bookingRequest[] = $numGuest;
+    $bookingRequest[] = $checkinTime;
+    $bookingRequest[] = $checkinDate;
+    $bookingRequest[] = $checkoutTime;
+    $bookingRequest[] = $checkoutDate;
+    $bookingRequest[] = $hotelName;
     
-
     // Check if the file upload is valid
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         // Get file data

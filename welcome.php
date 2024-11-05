@@ -34,9 +34,13 @@ $username = $_SESSION['user'];
        <a href="bookingFlight.php" class="button">Book a Flight</a>
        <a href="rate-review.php" class="button">Rate&Review</a>
        <a href="/Apache/html/logout.php"class="button">Logout</a>
-       <input type="text" placeholder="Search For Flights" id="searchFlight">
-       <input type="text" placeholder="Search For Locations" id="searchLocation">
-       
+       <!-- Found code on W3 Schools for search bar functions https://www.w3schools.com/howto/howto_css_searchbar.asp --> 
+            <div class="searchBars"> 
+            
+       <input type="text" placeholder="Search For Flights" id="searchFlight" name="searchFlight">
+       <input type="text" placeholder="Search For Locations" id="searchLocation" name="searchLocation">
+            <div> 
+        
 	
     </div>
 </body>

@@ -7,17 +7,13 @@ session_start();
 // Check if the user is logged in by verifying if the session variables are set
 // TODO session is not persisting, may be due to localhost or address issues
 
-if (!isset($_SESSION['user']) || !isset($_SESSION['role'])) {
+if (!isset($_SESSION['user'])) { //check only for user!!
     // If the user is not logged in, redirect to the login page
     header('Location: login.php');
     exit();
 }
 
-
-
 $username = $_SESSION['user'];
-$role = $_SESSION['role'];
-
 ?>
 
 <!DOCTYPE html>

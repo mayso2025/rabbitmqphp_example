@@ -18,8 +18,6 @@
             <?php endif;?>
 
 
-
-
             <form method="POST" action="/rabbitmqphp_example/testRabbitMQClient.php">
                 <div class="container">
                     <p>Please fill in all fields </p>
@@ -30,7 +28,8 @@
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password"/> <br><br>
                     <input type="submit" name="submit" value="Login"/>
-                    
+
+                    <a href="register.php" class="button">Register</a>
                 </div>
 	    </form>
 		<br> <!--TODO remove this once css implemented !!-->

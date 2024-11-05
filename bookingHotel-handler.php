@@ -1,6 +1,13 @@
 <?php
+session_start();
 require 'vendor/autoload.php';
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
 
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+
+$bookingRequest = array();
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -10,6 +17,12 @@ $channel = $connection->channel();
 
 // Declare a queue to send messages to
 $channel->queue_declare('booking_queue', false, true, false, false);
+// Database connection inspired from IT202 Fall 2023 with Professor Matthew Toegel. PD438 10/30/2024//
+$dsn = 'mysql:host=localhost;dbname=your_database';
+$username = 'admin';
+$password = '12345';
+$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
+$pdo = new PDO($dsn, $username, $password, $options);
 
 // Collect form data
 $bookingData = [
@@ -19,7 +32,7 @@ $bookingData = [
     'checkinTime' => $_POST['checkinTime'] ?? '',
     'checkoutDate' => $_POST['checkoutDate'] ?? '',
     'checkoutTime' => $_POST['checkoutTime'] ?? '',
-    'location' => $_POST['location'] ?? ''
+    'hotelName' => $_POST['hotelName'] ?? ''  // Corrected from 'location' to 'hotelName'
 ];
 
 // Convert booking data to JSON
@@ -36,8 +49,6 @@ $channel->close();
 $connection->close();
 
 // Redirect or display a success message
-session_start();
 $_SESSION['message'] = 'Booking submitted successfully!';
 header('Location: booking.php');
 exit;
-?>

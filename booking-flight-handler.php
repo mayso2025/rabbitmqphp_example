@@ -1,52 +1,63 @@
 <?php
-require 'vendor/autoload.php';
-
+session_start();
+require_once 'vendor/autoload.php'; // Ensure you have the PHP AMQP library loaded
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
 
-// Start a session to handle messages
-session_start();
+$dsn = 'mysql:host=localhost;dbname=your_database';
+$username = 'admin';
+$password = '12345';
+$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
+$pdo = new PDO($dsn, $username, $password, $options);
 
-try {
-    // Connect to RabbitMQ server
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Gather form data
+    $ticketOwner = $_POST['ticketOwner'];
+    $origin = $_POST['origin'];
+    $destination = $_POST['destination'];
+    $departureDate = $_POST['departureDate'];
+    $returnDate = $_POST['returnDate'];
+
+    // Validate required fields
+    if (empty($ticketOwner) || empty($origin) || empty($destination) || empty($departureDate) || empty($returnDate)) {
+        $_SESSION['message'] = 'Please fill in all fields.';
+        header('Location: form-page.php'); // Redirect to form page with message
+        exit;
+    }
+
+    // Connect to RabbitMQ
     $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
     $channel = $connection->channel();
 
-    // Declare a queue to send messages to
+    // Declare the queue
     $channel->queue_declare('flight_booking_queue', false, true, false, false);
 
-    // Collect form data
-    $flightBookingData = [
-        'guestName' => $_POST['guestName'] ?? '',
-        'numGuest' => $_POST['numGuest'] ?? '',
-        'checkinDate' => $_POST['checkinDate'] ?? '',
-        'checkinTime' => $_POST['checkinTime'] ?? '',
-        'checkoutDate' => $_POST['checkoutDate'] ?? '',
-        'checkoutTime' => $_POST['checkoutTime'] ?? '',
-        'location' => $_POST['location'] ?? ''
+    // Prepare the data to send
+    $bookingData = [
+        'ticketOwner' => $ticketOwner,
+        'origin' => $origin,
+        'destination' => $destination,
+        'departureDate' => $departureDate,
+        'returnDate' => $returnDate
     ];
 
-    // Convert booking data to JSON
-    $dataJson = json_encode($flightBookingData);
+    // Convert to JSON
+    $message = new AMQPMessage(json_encode($bookingData), ['delivery_mode' => 2]);
 
-    // Create a message with the data
-    $message = new AMQPMessage($dataJson, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
-
-    // Publish the message to the queue
+    // Send the message
     $channel->basic_publish($message, '', 'flight_booking_queue');
 
     // Close the channel and connection
     $channel->close();
     $connection->close();
 
-    // Set a success message and redirect
+    // Set success message and redirect
     $_SESSION['message'] = 'Flight booking submitted successfully!';
-} catch (Exception $e) {
-    // If there's an error, set an error message
-    $_SESSION['message'] = 'Error: ' . $e->getMessage();
+    header('Location: form-page.php'); // Redirect to form page with message
+    exit;
 }
-
-// Redirect back to bookingflight.php
-header('Location: bookingflight.php');
-exit;
 ?>

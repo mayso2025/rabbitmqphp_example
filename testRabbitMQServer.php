@@ -12,13 +12,13 @@ function doLogin($username, $password) {
 	//
 
 
-    $host = 'localhost';
-    $dbUser = 'root';
-    $dbPass = '';
+    $host = 'node2';
+    $dbUser = 'test';
+    $dbPass = 'test';
     $dbName = 'it490';
 
     // Create a database connection
-    $conn = new mysqli($host, $dbUser, $dbPass, $dbName);
+    $conn = mysqli_connect($host, $dbUser, $dbPass, $dbName);
 
     // Check for connection errors
     if ($conn->connect_error) {

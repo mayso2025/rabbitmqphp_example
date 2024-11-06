@@ -14,7 +14,7 @@
     }
     ?>
 
-    <form action="rate-review-handler.php" method="post" enctype="multipart/form-data">
+    <form method="POST" action="rate-review-handler.php" enctype="multipart/form-data">
         <label for="guestName">Guest Name:</label><br>
         <input type="text" id="guestName" name="guestName" required><br><br>
 
@@ -38,6 +38,5 @@
         <input type="file" name="photo" id="photo" accept="image/*"><br><br>
         <a href="book.php" class="button">Book a Flight</a>
         <a href="/Apache/html/logout.php">Logout</a>
-        
 </body>
 </html>

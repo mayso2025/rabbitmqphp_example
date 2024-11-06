@@ -111,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Redirect back to the review page
-header('Location: rate-review.php');
-exit;
+header('Location:rate-review.php');
+exit();
+
 ?>

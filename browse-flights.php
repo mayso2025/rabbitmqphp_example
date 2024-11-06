@@ -1,5 +1,21 @@
 <?php
 session_start(); 
+require_once('path.inc');
+require_once('get_host_info.inc');
+require_once('rabbitMQLib.inc');
+
+// Connect to RabbitMQ server
+$connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+$channel = $connection->channel();
+
+// Declare queues for processing rate reviews
+$channel->queue_declare('rate_review_queue', false, true, false, false);
+$channel->queue_declare('rate_review_response_queue', false, true, false, false);
+
+// Database connection (replace with actual database credentials)
+$pdo = new PDO('mysql:host=localhost;dbname=your_database', 'db_user', 'db_password');
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 // Check if the search button is clicked
 if (isset($_GET['search'])) {
   // Get the user input

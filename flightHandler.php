@@ -12,9 +12,9 @@ $flightBook = array();
 
 
 // Database connection inspired from IT202 Fall 2023 with Professor Matthew Toegel. PD438 10/30/2024//
-$dsn = 'mysql:host=localhost;dbname=your_database';
-$username = 'admin';
-$password = '12345';
+$dsn = 'mysql:host=localhost;dbname=it490';
+$username = 'test';
+$password = 'test';
 $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
 $pdo = new PDO($dsn, $username, $password, $options);
 

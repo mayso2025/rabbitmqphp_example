@@ -19,16 +19,16 @@ $requestReview = array();
 
 
 // Database connection inspired from IT202 Fall 2023 with Professor Matthew Toegel. PD438 10/30/2024//
-$dsn = 'mysql:host=localhost;dbname=your_database';
-$username = 'admin';
-$password = '12345';
+$dsn = 'mysql:host=localhost;dbname=it490';
+$username = 'test';
+$password = 'test';
 $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
 $pdo = new PDO($dsn, $username, $password, $options);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get review text
     $reviewText = $_POST['review_text'];
-    $reviewNum = $_POST['rating']
+    $reviewNum = $_POST['rating'];
 
     // Check if the file upload is valid
 
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $response = $client->send_request($requestReview); //sends data up the MQ
 
-        echo $response //just to test 
+        echo $response;//just to test 
 
         // Insert data into database
         //Maybe insert the database code in a seperate file? instead of having the handler be in the front-end
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
          */ 
        
     }
-
+}
 
 try {
     // Connect to RabbitMQ server

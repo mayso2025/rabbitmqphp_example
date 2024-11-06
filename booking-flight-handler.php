@@ -13,7 +13,7 @@ require_once('rabbitMQLib.inc');
     $dbName = 'it490';
 
     // Create a database connection
-    $conn = new mysqli_connect($host, $dbUser, $dbPass, $dbName);
+    $conn = mysqli_connect($host, $dbUser, $dbPass, $dbName);
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -24,7 +24,7 @@ $channel->queue_declare('booking_queue', false, true, false, false);
     $dbName = 'it490';
 
     // Create a database connection
-    $conn = new mysqli_connect($host, $dbUser, $dbPass, $dbName);
+    $conn = mysqli_connect($host, $dbUser, $dbPass, $dbName);
 
 // Collect form data
 $bookingData = [

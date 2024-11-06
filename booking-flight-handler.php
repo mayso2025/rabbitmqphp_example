@@ -7,7 +7,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$dsn = 'mysql:host=localhost;dbname=your_database';
+$dsn = 'mysql:host=localhost;dbname=your_database'; 
 $username = 'admin';
 $password = '12345';
 $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];

@@ -36,7 +36,6 @@ $username = $_SESSION['user'];
        <a href="/Apache/html/logout.php"class="button">Logout</a>
        <!-- Found code on W3 Schools for search bar functions https://www.w3schools.com/howto/howto_css_searchbar.asp --> 
             <div class="searchBars"> 
-            
        <input type="text" placeholder="Search For Flights" id="searchFlight" name="searchFlight">
        <input type="text" placeholder="Search For Locations" id="searchLocation" name="searchLocation">
             <div> 

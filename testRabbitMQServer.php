@@ -12,7 +12,7 @@ function doLogin($username, $password) {
 	//
 
 
-    $host = 'node2';
+    $host = 'node4';
     $dbUser = 'test';
     $dbPass = 'test';
     $dbName = 'it490';

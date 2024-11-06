@@ -154,6 +154,7 @@ function processCall($accessToken, $callUrl){
 #==========
 
 function requestApi($request){
+	$locationCode = $request['location'];
 	$accessToken = getAccessToken($apiKey, $apiSecret);
 	if ($accessToken){
 		switch ($request['type']){

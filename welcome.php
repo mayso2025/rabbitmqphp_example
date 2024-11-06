@@ -30,11 +30,17 @@ $username = $_SESSION['user'];
         <p>You have successfully logged in.</p>
        <!-- <p>Your role is: <?php echo htmlspecialchars($role); ?></p> -->
        <a href="search.php" class="button">Search</a>
-       <a href="bookinghotel.php" class="button">Book a Hotel</a>
+       <a href="bookingHotel.php" class="button">Book a Hotel</a>
        <a href="bookingFlight.php" class="button">Book a Flight</a>
        <a href="rate-review.php" class="button">Rate&Review</a>
        <a href="/Apache/html/logout.php"class="button">Logout</a>
-       
+       <!-- Found code on W3 Schools for search bar functions https://www.w3schools.com/howto/howto_css_searchbar.asp --> 
+            <div class="searchBars"> 
+            
+       <input type="text" placeholder="Search For Flights" id="searchFlight" name="searchFlight">
+       <input type="text" placeholder="Search For Locations" id="searchLocation" name="searchLocation">
+            <div> 
+        
 	
     </div>
 </body>

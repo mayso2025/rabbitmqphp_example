@@ -17,7 +17,7 @@ session_start();
     ?>
 
     <form action="booking-handler.php" method="post">
-        <label for="guestName">Name of booker</label> <br> 
+        <label for="guestName">Guestname/label> <br> 
         <input type="text" name="guestName" required> <br> 
         
         <label for="numGuest">How many people in total?</label><br> 

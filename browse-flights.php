@@ -46,7 +46,7 @@ if (isset($_GET['search'])) {
     // Prepare and execute the query
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
-    // Fetch the results as an associative array
+    // Fetch the results as an associative array where all queury data is stored 
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // Display the number of results
     echo "<p>Found " . count($results) . " results.</p>";

@@ -5,7 +5,7 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 // Connect to RabbitMQ server
-$connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 $channel = $connection->channel();
 
 // Declare queues for processing rate reviews
@@ -17,17 +17,44 @@ $pdo = new PDO('mysql:host=localhost;dbname=your_database', 'db_user', 'db_passw
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Check if the search button is clicked
-if (isset($_GET['search'])) {
+if (isset($_POST['search'])) {
   // Get the user input
-  $keyword = $_GET['keyword'];
-  $category = $_GET['category'];
+
+    
   // Validate the user input
-  if (empty($keyword) && empty($category)) {
+  if (empty($keyword)) {
     // Display an error message if both inputs are empty
-    echo "<p>Please enter a keyword or select a category.</p>";
+    echo "<p>The search bar is empty, please type something</p>";
   } else {
+
+    $request = array();
+    $request['type'] = "search";
+    $keyword = $_POST['search']; 
+    $request[] = $keyword; 
+    $response = $client->send_request($request); // sends up to the mq 
+    if ($response) { //as-is, it sends both success and failures
+        if ($response['returnCode']){ //this specifies if logn is success (returnCode=1)
+            $_SESSION['message'] = 'Your Search is Successfull One Moment';
+            
+            echo $response;
+            exit();
+        }
+        else {
+            //TODO add an error message for php, not html
+            $_SESSION['message'] = 'No results found';
+            
+            exit();
+        }
+    }
+    else {
+        //TODO add an error message for php, not html
+        
+        exit();
+    
+    }
     // Build the query based on the user input
-    $sql = "SELECT * FROM products WHERE ";
+    /*
+    $sql = "SELECT * FROM locations WHERE type = $keyword "; . //makes a query search where the user searches on an html form, php stores it in keyword and tahts what is "searched" through the database 
     $params = [];
     if (!empty($keyword)) {
       // Add a condition for the keyword
@@ -50,7 +77,9 @@ if (isset($_GET['search'])) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // Display the number of results
     echo "<p>Found " . count($results) . " results.</p>";
+    */
   }
+    
 }        
 
 ?>

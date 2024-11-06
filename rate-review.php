@@ -35,7 +35,7 @@
         <button type="submit">Submit Review</button>
     </form>
     <label for="photo">Upload Photo:</label>
-        <input type="file" name="photo" id="photo" accept="image/*" required><br><br>
+        <input type="file" name="photo" id="photo" accept="image/*"><br><br>
         <a href="book.php" class="button">Book a Flight</a>
         <a href="/Apache/html/logout.php">Logout</a>
         

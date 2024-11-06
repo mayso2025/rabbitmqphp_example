@@ -10,8 +10,8 @@ require_once('rabbitMQLib.inc');
 
 $client = new rabbitMQClient("testRabbitMQ.ini", "testServer");
 
-// Database connection
-$dsn = 'mysql:host=localhost;dbname=it490';
+// Database connection settings
+$dsn = 'mysql:host=node4;dbname=it490';
 $username = 'test';
 $password = 'test';
 $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
@@ -48,8 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['photo']['tmp_name'];
         $fileContent = file_get_contents($fileTmpPath);
-    } else {
-        $_SESSION['message'] .= " Note: No photo uploaded or error in uploading.";
+    } else{
+    
+        $_SESSION['message'] = "ERROR: Failed to upload selected file.";
+    
     }
 
     // RabbitMQ message setup
@@ -83,15 +85,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         while (!$response && $channel->is_consuming() && (time() - $start) < $timeout) {
             $channel->wait(null, false, 1);
         }
-
-        // Close RabbitMQ connection
-        $channel->close();
-        $connection->close();
+        
 
         $_SESSION['message'] = $response ? 'Rate review submitted successfully!' : 'No response received from review service.';
+  
 
     } catch (Exception $e) {
         $_SESSION['message'] = 'Error sending review to RabbitMQ: ' . $e->getMessage();
+    } finally {
+          // Close RabbitMQ connection
+          if ($channel){
+            $channel->close();
+          }
+        $connection->close();
+          
     }
 
     // Store review and optional photo data in the database
@@ -110,11 +117,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':photo', $fileContent, PDO::PARAM_LOB);
         }
 
+
         $_SESSION['message'] .= $stmt->execute() ? " Review saved to the database successfully!" : " Error saving review to the database.";
 
     } catch (Exception $e) {
         $_SESSION['message'] .= ' Database error: ' . $e->getMessage();
     }
+
 }
 
 // Redirect back to the review page

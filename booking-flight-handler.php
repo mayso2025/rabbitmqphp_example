@@ -15,6 +15,7 @@ require_once('rabbitMQLib.inc');
     // Create a database connection
     $conn = mysqli_connect($host, $dbUser, $dbPass, $dbName);
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Gather form data
     $ticketOwner = $_POST['ticketOwner'];

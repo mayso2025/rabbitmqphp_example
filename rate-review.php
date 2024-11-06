@@ -31,7 +31,6 @@
         <input type="date" id="date" name="date" required><br><br>
 
 
-        <label for="rating" max="5" min="1">Rate the Location (Between 1-5) </label><br>
         <input type="number" id="rating" name="rating" min="1" max="5"><br>
     </form>
     <label for="photo">Upload Photo:</label>

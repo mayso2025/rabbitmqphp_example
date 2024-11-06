@@ -134,6 +134,6 @@ try {
 }
 
 // Redirect back to the review page
-header('Location: reviewpage.php');
+header('Location:rate-review.php');
 exit;
 ?>

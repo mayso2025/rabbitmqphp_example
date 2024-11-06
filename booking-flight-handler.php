@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validate required fields
     if (empty($ticketOwner) || empty($origin) || empty($destination) || empty($departureDate) || empty($returnDate)) {
         $_SESSION['message'] = 'Please fill in all fields.';
-        header('Location: form-page.php'); // Redirect to form page with message
+        header('Location: bookingFlight.php'); // Redirect to form page with message
         exit;
     }
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Set success message and redirect
     $_SESSION['message'] = 'Flight booking submitted successfully!';
-    header('Location: form-page.php'); // Redirect to form page with message
+    header('Location:bookingFlight.php'); // Redirect to form page with message
     exit;
 }
 ?>

@@ -50,5 +50,5 @@ $connection->close();
 
 // Redirect or display a success message
 $_SESSION['message'] = 'Booking submitted successfully!';
-header('Location: booking.php');
+header('Location: bookingHotel.php');
 exit;

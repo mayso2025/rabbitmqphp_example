@@ -35,14 +35,11 @@
         <input type="number" id="rating" name="rating" min="1" max="5"><br>
         <label for="lname">Review:</label><br>
         <textarea id="box" name="review_box" rows="10" cols="50"> 
-=======
-
-        <label for="photo">Upload Photo:</label>
+    </form>
+    <label for="photo">Upload Photo:</label>
         <input type="file" name="photo" id="photo" accept="image/*" required><br><br>
-
-        <button type="submit">Submit Review</button>
         <a href="book.php" class="button">Book a Flight</a>
         <a href="/Apache/html/logout.php">Logout</a>
-    </form>
+        <button type="submit">Submit Review</button>
 </body>
 </html>

@@ -29,7 +29,7 @@ $callback = function($msg) use ($pdo, $channel) {
     $date = $rateReviewData['date'];
 
     // Insert rate review data into the database
-    $stmt = $pdo->prepare("INSERT INTO rate_reviews (guest_name, review, rating, location, date) VALUES (:guestName, :review, :rating, :location, :date)");
+    $stmt = $pdo->prepare("INSERT INTO reviews (guest_name, review, rating, location, date) VALUES (:guestName, :review, :rating, :location, :date)");
     $stmt->execute([
         'guestName' => $guestName,
         'review' => $review,

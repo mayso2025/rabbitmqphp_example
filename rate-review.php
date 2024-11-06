@@ -30,20 +30,14 @@
         <label for="date">Date of Visit:</label><br>
         <input type="date" id="date" name="date" required><br><br>
 
+        <label for="photo">Upload Photo (optional):</label><br>
+        <input type="file" name="photo" id="photo" accept="image/*"><br><br>
 
-        <input type="number" id="rating" name="rating" min="1" max="5"><br>
+        <button type="submit">Submit Review</button>
+    </form>
 
-        <input type="submit" name="submit" value="Submit Review">
-      
-        <label for="photo">Upload Photo:</label>
-        <input type="file" name="upload-img" id="photo" accept="image/*"><br><br>
-</form>
-
-    
-      
-      
-<br><br>
-	<a href="book.php" class="button">Book a Flight</a>
-        <a href="/Apache/html/logout.php">Logout</a>
+    <br>
+    <a href="book.php" class="button">Book a Flight</a>
+    <a href="/Apache/html/logout.php">Logout</a>
 </body>
 </html>

@@ -13,7 +13,7 @@ require_once('rabbitMQLib.inc');
 $client = new rabbitMQClient("testRabbitMQ.ini", "testServer");
 
 // Database connection settings
-$dsn = 'mysql:host=localhost;dbname=it490';
+$dsn = 'mysql:host=node4;dbname=it490';
 $username = 'test';
 $password = 'test';
 $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
@@ -38,6 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Check for a valid photo upload
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+    } else{
+    
+        $_SESSION['message'] = "Error with the uploaded photo.";
+    
+    }
         $fileTmpPath = $_FILES['photo']['tmp_name'];
         $fileContent = file_get_contents($fileTmpPath);
 
@@ -94,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':rating', $rateReviewData['rating']);
             $stmt->bindParam(':location', $rateReviewData['location']);
             $stmt->bindParam(':date', $rateReviewData['date']);
-            $stmt->bindParam(':photo', $fileContent, PDO::PARAM_LOB);
+            //$stmt->bindParam(':photo', $fileContent, PDO::PARAM_LOB);
 
             if ($stmt->execute()) {
                 $_SESSION['message'] .= " Review and photo saved to the database successfully!";
@@ -105,9 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } catch (Exception $e) {
             $_SESSION['message'] .= ' Database error: ' . $e->getMessage();
         }
-    } else {
-        $_SESSION['message'] = "Error with the uploaded photo.";
-    }
+   
 }
 
 // Redirect back to the review page

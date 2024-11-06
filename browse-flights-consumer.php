@@ -15,9 +15,9 @@ $channel = $connection->channel();
 $channel->queue_declare('booking_queue', false, true, false, false);
 
 // Database connection (ensure credentials match your setup)
-$dsn = 'mysql:host=localhost;dbname=your_database';
-$username = 'admin';
-$password = '12345';
+$dsn = 'mysql:host=node2;dbname=it490';
+$username = 'test';
+$password = 'test';
 $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
 $pdo = new PDO($dsn, $username, $password, $options);
 

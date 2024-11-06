@@ -34,7 +34,6 @@
 	    </form>
 		<br> <!--TODO remove this once css implemented !!-->
 		<div>
-		<a href="register.php">Register</a>
 		</div>
         </div>
     </body>

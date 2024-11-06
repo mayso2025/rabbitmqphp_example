@@ -16,7 +16,7 @@ $channel->queue_declare('rate_review_queue', false, true, false, false);
 $channel->queue_declare('rate_review_response_queue', false, true, false, false);
 
 // Database connection (replace with actual database credentials)
-$pdo = new PDO('mysql:host=localhost;dbname=your_database', 'db_user', 'db_password');
+$pdo = new PDO('mysql:host=localhost;dbname=it490', 'test', 'test');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $callback = function($msg) use ($pdo, $channel) {

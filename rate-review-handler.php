@@ -1,18 +1,16 @@
 <?php
+session_start();
 require 'vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-
-session_start();
 
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-// Set up RabbitMQ client
 $client = new rabbitMQClient("testRabbitMQ.ini", "testServer");
 
-// Database connection settings
+// Database connection
 $dsn = 'mysql:host=localhost;dbname=it490';
 $username = 'test';
 $password = 'test';
@@ -27,7 +25,7 @@ try {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Collect form data
+    // Collect form data with additional validation
     $rateReviewData = [
         'guestName' => $_POST['guestName'] ?? '',
         'review' => $_POST['review'] ?? '',
@@ -36,82 +34,89 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'date' => $_POST['date'] ?? ''
     ];
 
-    // Check for a valid photo upload
+    // Check required fields
+    foreach ($rateReviewData as $key => $value) {
+        if (empty($value)) {
+            $_SESSION['message'] = "Please fill in all required fields.";
+            header('Location: rate-review.php');
+            exit;
+        }
+    }
+
+    // Check if photo is uploaded
+    $fileContent = null;
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['photo']['tmp_name'];
         $fileContent = file_get_contents($fileTmpPath);
-
-        // Send data to RabbitMQ
-        try {
-            $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
-            $channel = $connection->channel();
-
-            // Declare queues
-            $channel->queue_declare('rate_review_queue', false, true, false, false);
-            $channel->queue_declare('rate_review_response_queue', false, true, false, false);
-
-            // Convert review data to JSON
-            $dataJson = json_encode($rateReviewData);
-
-            // Create and publish the message
-            $message = new AMQPMessage($dataJson, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
-            $channel->basic_publish($message, '', 'rate_review_queue');
-
-            // Listen for a response in the response queue
-            $response = null;
-            $callback = function($responseMsg) use (&$response) {
-                $response = json_decode($responseMsg->body, true);
-                $_SESSION['responseData'] = $response;
-                $responseMsg->ack(); // Acknowledge the response message
-            };
-            $channel->basic_consume('rate_review_response_queue', '', false, false, false, false, $callback);
-
-            // Wait for response
-            while (!$response && $channel->is_consuming()) {
-                $channel->wait();
-            }
-
-            // Close RabbitMQ connection
-            $channel->close();
-            $connection->close();
-
-            // Set response message
-            if ($response) {
-                $_SESSION['message'] = 'Rate review submitted successfully!';
-            } else {
-                $_SESSION['message'] = 'No response received from review service.';
-            }
-
-        } catch (Exception $e) {
-            $_SESSION['message'] = 'Error sending review to RabbitMQ: ' . $e->getMessage();
-        }
-
-        // Store review and photo data in the database
-        try {
-            $stmt = $pdo->prepare("INSERT INTO reviews (guestName, review, rating, location, visitDate, photo_data) VALUES (:guestName, :review, :rating, :location, :date, :photo)");
-            $stmt->bindParam(':guestName', $rateReviewData['guestName']);
-            $stmt->bindParam(':review', $rateReviewData['review']);
-            $stmt->bindParam(':rating', $rateReviewData['rating']);
-            $stmt->bindParam(':location', $rateReviewData['location']);
-            $stmt->bindParam(':date', $rateReviewData['date']);
-            $stmt->bindParam(':photo', $fileContent, PDO::PARAM_LOB);
-
-            if ($stmt->execute()) {
-                $_SESSION['message'] .= " Review and photo saved to the database successfully!";
-            } else {
-                $_SESSION['message'] .= " Error saving review and photo to the database.";
-            }
-
-        } catch (Exception $e) {
-            $_SESSION['message'] .= ' Database error: ' . $e->getMessage();
-        }
     } else {
-        $_SESSION['message'] = "Error with the uploaded photo.";
+        $_SESSION['message'] .= " Note: No photo uploaded or error in uploading.";
+    }
+
+    // RabbitMQ message setup
+    try {
+        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        $channel = $connection->channel();
+
+        // Declare queues
+        $channel->queue_declare('rate_review_queue', false, true, false, false);
+        $channel->queue_declare('rate_review_response_queue', false, true, false, false);
+
+        // Convert review data to JSON
+        $dataJson = json_encode($rateReviewData);
+
+        // Create and publish the message
+        $message = new AMQPMessage($dataJson, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
+        $channel->basic_publish($message, '', 'rate_review_queue');
+
+        // Listen for a response in the response queue
+        $response = null;
+        $callback = function($responseMsg) use (&$response) {
+            $response = json_decode($responseMsg->body, true);
+            $_SESSION['responseData'] = $response;
+            $responseMsg->ack(); 
+        };
+        $channel->basic_consume('rate_review_response_queue', '', false, false, false, false, $callback);
+
+        // Wait for response with timeout to avoid infinite waiting
+        $timeout = 10;
+        $start = time();
+        while (!$response && $channel->is_consuming() && (time() - $start) < $timeout) {
+            $channel->wait(null, false, 1);
+        }
+
+        // Close RabbitMQ connection
+        $channel->close();
+        $connection->close();
+
+        $_SESSION['message'] = $response ? 'Rate review submitted successfully!' : 'No response received from review service.';
+
+    } catch (Exception $e) {
+        $_SESSION['message'] = 'Error sending review to RabbitMQ: ' . $e->getMessage();
+    }
+
+    // Store review and optional photo data in the database
+    try {
+        $sql = "INSERT INTO reviews (guestName, review, rating, location, visitDate" . ($fileContent ? ", photo_data" : "") . ") 
+                VALUES (:guestName, :review, :rating, :location, :date" . ($fileContent ? ", :photo" : "") . ")";
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(':guestName', $rateReviewData['guestName']);
+        $stmt->bindParam(':review', $rateReviewData['review']);
+        $stmt->bindParam(':rating', $rateReviewData['rating']);
+        $stmt->bindParam(':location', $rateReviewData['location']);
+        $stmt->bindParam(':date', $rateReviewData['date']);
+        
+        if ($fileContent) {
+            $stmt->bindParam(':photo', $fileContent, PDO::PARAM_LOB);
+        }
+
+        $_SESSION['message'] .= $stmt->execute() ? " Review saved to the database successfully!" : " Error saving review to the database.";
+
+    } catch (Exception $e) {
+        $_SESSION['message'] .= ' Database error: ' . $e->getMessage();
     }
 }
 
 // Redirect back to the review page
-header('Location:rate-review.php');
+header('Location: rate-review.php');
 exit();
-
-?>

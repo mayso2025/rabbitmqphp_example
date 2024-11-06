@@ -32,11 +32,14 @@
 
 
         <input type="number" id="rating" name="rating" min="1" max="5"><br>
-    
+
         <input type="submit" name="submit" value="Submit Review">
+      
+        <label for="photo">Upload Photo:</label>
+        <input type="file" name="upload-img" id="photo" accept="image/*"><br><br>
 </form>
-    <label for="photo">Upload Photo:</label>
-        <input type="file" name="photo" id="photo" accept="image/*" required><br><br>
+
+    
       
       
 <br><br>

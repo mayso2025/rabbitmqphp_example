@@ -7,11 +7,13 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$dsn = 'mysql:host=node2;dbname=it490'; 
-$username = 'test';
-$password = 'test';
-$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
-$pdo = new PDO($dsn, $username, $password, $options);
+    $host = 'node4';
+    $dbUser = 'test';
+    $dbPass = 'test';
+    $dbName = 'it490';
+
+    // Create a database connection
+    $conn = new mysqli_connect($host, $dbUser, $dbPass, $dbName);
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

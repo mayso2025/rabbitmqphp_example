@@ -17,12 +17,14 @@ $channel = $connection->channel();
 
 // Declare a queue to send messages to
 $channel->queue_declare('booking_queue', false, true, false, false);
-// Database connection inspired from IT202 Fall 2023 with Professor Matthew Toegel. PD438 10/30/2024//
-$dsn = 'mysql:host=localhost;dbname=your_database';
-$username = 'admin';
-$password = '12345';
-$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
-$pdo = new PDO($dsn, $username, $password, $options);
+// Database connection taken from testRabbitMQServer.php
+    $host = 'node4';
+    $dbUser = 'test';
+    $dbPass = 'test';
+    $dbName = 'it490';
+
+    // Create a database connection
+    $conn = new mysqli_connect($host, $dbUser, $dbPass, $dbName);
 
 // Collect form data
 $bookingData = [

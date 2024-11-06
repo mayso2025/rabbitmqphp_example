@@ -18,7 +18,7 @@ function doLogin($username, $password) {
     $dbName = 'it490';
 
     // Create a database connection
-    $conn = new mysqli($host, $dbUser, $dbPass, $dbName);
+    $conn = new mysqli_connect($host, $dbUser, $dbPass, $dbName);
 
     // Check for connection errors
     if ($conn->connect_error) {

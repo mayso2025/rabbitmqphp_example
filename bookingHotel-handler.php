@@ -5,26 +5,29 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
-
-$bookingRequest = array();
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-// Connect to RabbitMQ server
+// RabbitMQ connection details
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
 $channel = $connection->channel();
 
-// Declare a queue to send messages to
+// Declare the queue
 $channel->queue_declare('booking_queue', false, true, false, false);
-// Database connection taken from testRabbitMQServer.php
-    $host = 'node4';
-    $dbUser = 'test';
-    $dbPass = 'test';
-    $dbName = 'it490';
 
-    // Create a database connection
-    $conn = mysqli_connect($host, $dbUser, $dbPass, $dbName);
+// Database connection settings
+$host = 'node4';
+$dbUser = 'test';
+$dbPass = 'test';
+$dbName = 'it490';
+$conn = mysqli_connect($host, $dbUser, $dbPass, $dbName);
+
+if (!$conn) {
+    $_SESSION['message'] = "Database connection failed: " . mysqli_connect_error();
+    header('Location: bookingHotel.php');
+    exit();
+}
 
 // Collect form data
 $bookingData = [
@@ -34,23 +37,20 @@ $bookingData = [
     'checkinTime' => $_POST['checkinTime'] ?? '',
     'checkoutDate' => $_POST['checkoutDate'] ?? '',
     'checkoutTime' => $_POST['checkoutTime'] ?? '',
-    'hotelName' => $_POST['hotelName'] ?? ''  // Corrected from 'location' to 'hotelName'
+    'hotelName' => $_POST['hotelName'] ?? ''
 ];
 
-// Convert booking data to JSON
+// Convert booking data to JSON and send to RabbitMQ
 $dataJson = json_encode($bookingData);
-
-// Create a message with the data
 $message = new AMQPMessage($dataJson, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
-
-// Publish the message to the queue
 $channel->basic_publish($message, '', 'booking_queue');
 
-// Close the channel and connection
+// Close RabbitMQ channel and connection
 $channel->close();
 $connection->close();
 
-// Redirect or display a success message
+// Set success message and redirect
 $_SESSION['message'] = 'Booking submitted successfully!';
 header('Location: bookingHotel.php');
-exit;
+exit();
+?>

@@ -11,7 +11,7 @@ if (isset($argv[1]))
 }
 else
 {
-  $msg = "test message";
+  $msg = "login request sent";
 }
 
 $request = array();
@@ -21,6 +21,16 @@ $request['password'] = "password";
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
+
+if($response['returnCode'] == 1) //This picks up return code 
+//if the front-end recieves a message from the MQ with a return code of 1, it means the login is successful 
+{
+  header("Location: index.php");
+}
+else if ($response['returnCode'] == 0) //returns user back to login page 
+{
+  header("Location: index.html");
+}
 
 echo "client received response: ".PHP_EOL;
 print_r($response);

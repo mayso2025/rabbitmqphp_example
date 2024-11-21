@@ -1,4 +1,109 @@
 <!DOCTYPE html>
-<html> 
-    <!--Insert shey's code here -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Link to Roboto Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif; 
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #5f6f96;
+        }
+        .login-container {
+            background-color: #E2E2E2;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #bfbfbf;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #3d4afa;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 700; 
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #3e2df7;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .form-footer {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .form-footer a {
+            color: hwb(234 38% 0%);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <div id="error" class="error"></div>
+        </form>
+        <div class="form-footer">
+            <p>Don't have an account?</p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate validation
+            if (username === 'admin' && password === 'password123') {
+                alert('Login successful!');
+                // Redirect to another page (if needed)
+            } else {
+                const errorMessage = document.getElementById('error');
+                errorMessage.textContent = 'Invalid username or password!';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
 </html>
+
+index.html
